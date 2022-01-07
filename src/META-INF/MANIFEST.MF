@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: com.jxtras.android.build.tools.arpt.Main
+
