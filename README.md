@@ -112,17 +112,21 @@ arpt.xml
         <item>camera_object_tracking_setting_title</item>
         <item>camera_object_tracking_setting_description</item>
     </string>
+
     <string availability="smith|lisa">
         <item>camera_video_recording_device_too_hot_tips</item>
     </string>
+
     <string-array availability="smith">
-        <item>pref_video_quality_values</item>
+        <item>camera_video_quality_values</item>
     </string-array>
+
     <plurals availability="lisa">
-        <item>accessibility_timer_burst_count</item>
+        <item>camera_burst_capture_count</item>
     </plurals>
+
     <file availability="smith">
-        <item>drawable/ic_asd_scene_car.png</item>
+        <item>drawable/camera_asd_scene_car.png</item>
     </file>
 </resources>
 ```
