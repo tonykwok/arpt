@@ -3,7 +3,7 @@ Android Resource Pruning Tool
 
 ## usage
 
-Android.mk
+### Android.mk
 
 ```
 LOCAL_PATH := $(call my-dir)
@@ -37,7 +37,7 @@ $(info $(LOCAL_PACKAGE_NAME): LOCAL_FULL_MANIFEST_FILE: $(LOCAL_FULL_MANIFEST_FI
 include $(BUILD_RRO_PACKAGE)
 ```
 
-arpt.mk
+### arpt.mk
 
 ```
 ifeq ($(LOCAL_FULL_MANIFEST_FILE),)
@@ -93,7 +93,7 @@ LOCAL_RESOURCE_DIR := $(arpt_target_resource_dir)
 LOCAL_FULL_MANIFEST_FILE := $(arpt_target_manifest_file)
 ```
 
-arpt.xml
+### arpt.xml
 
 ```
 <?xml version="1.0" encoding="utf-8" ?>
