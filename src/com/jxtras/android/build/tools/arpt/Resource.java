@@ -72,8 +72,7 @@ public enum Resource {
         return resourceType;
     }
 
-    public static @Nullable
-    Resource of(@Nullable String resourceType) {
+    public static @Nullable Resource of(@NonNull String resourceType) {
         synchronized(types) {
             return types.computeIfAbsent(resourceType, s -> {
                 for (Resource resource : Resource.values()) {
@@ -136,7 +135,7 @@ public enum Resource {
                             + ": " + node.getAttribute("name") + " removed successfully");
                     node.getParentNode().removeChild(node);
                 }
-                saveXML(document, new FileOutputStream(xmlFile));
+                saveDocument(document, xmlFile);
             }
         } catch (Exception e) {
             Log.error("arpt: exception occurred: " + e.getMessage());
@@ -144,8 +143,8 @@ public enum Resource {
         Log.info("arpt: " + removableNodes.size() + " resource(s) removed");
     }
 
-    private static void saveXML(@NonNull Document document, @NonNull OutputStream out) {
-        try {
+    private static void saveDocument(@NonNull Document document, @NonNull File xmlFile) {
+        try (FileOutputStream fos = new FileOutputStream(xmlFile) {
             document.setXmlStandalone(document.getXmlStandalone());
             document.setXmlVersion(document.getXmlVersion());
 
@@ -158,7 +157,7 @@ public enum Resource {
 //            out.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>".getBytes(StandardCharsets.UTF_8));
 //            out.write(System.lineSeparator().getBytes(StandardCharsets.UTF_8));
             DOMSource domSource = new DOMSource(document);
-            StreamResult streamResult = new StreamResult(out);
+            StreamResult streamResult = new StreamResult(fos);
             transformer.transform(domSource, streamResult);
         } catch (Exception e) {
             Log.error("arpt: exception occurred: " + e.getMessage());
