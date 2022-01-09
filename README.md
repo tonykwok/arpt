@@ -55,9 +55,9 @@ endif
 arpt_exec_file := $(LOCAL_PATH)/arpt.jar
 arpt_rule_file := $(LOCAL_PATH)/arpt.xml
 
-arpt_product_name := $(CAMERA_PRODUCT)
+arpt_product_name := $(RESOURCE_PRUNING_TARGET_PRODUCT_NAME)
 
-# DIR: out/target/common/obj/APPS/MiuiCameraOverlay_intermediates/arpt
+# DIR: out/target/common/obj/APPS/<YOUR PACKAGE NAME>_intermediates/arpt
 arpt_intermediates_dir := $(call intermediates-dir-for,APPS,$(LOCAL_PACKAGE_NAME),,COMMON)/arpt
 
 arpt_source_resource_dir := $(LOCAL_RESOURCE_DIR)
