@@ -52,7 +52,7 @@ public class Rule {
 
             final Element root = document.getDocumentElement();
             if (!"resources".equals(root.getTagName())) {
-                Log.error("arpt: the name of root node be 'resources'");
+                Log.error("arpt: the name of root node must be 'resources'");
                 return rules;
             }
 
