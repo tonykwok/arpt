@@ -117,7 +117,7 @@ public enum Resource {
 
             final NodeList resources = document.getElementsByTagName(resourceType);
             if (resources == null || resources.getLength() == 0) {
-                Log.info("arpt: node with name '" + resourceType + "' does not exist");
+                Log.info("arpt: resource of type '" + resourceType + "' does not exist");
                 return;
             }
 
