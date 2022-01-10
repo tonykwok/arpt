@@ -48,7 +48,7 @@ public class Main {
                 return -1;
             }
 
-            final List<Rule> rules = Rule.parseRules(ruleFile, targetProduct);
+            final List<Rule> rules = Rule.parseRules(ruleFile);
             if (rules.isEmpty()) {
                 Log.info("arpt: no rules provided for target '" + targetProduct + "'");
                 return 0;
@@ -60,14 +60,14 @@ public class Main {
                 return 0;
             }
 
-            return prune(resDirs, rules);
+            return prune(resDirs, targetProduct, rules);
         } catch (Exception e) {
             Log.error("arpt: exception occurred: " + e.getMessage());
             return -1;
         }
     }
 
-    private static int prune(@NonNull List<Path> resDirs, @NonNull List<Rule> rules) {
+    private static int prune(@NonNull List<Path> resDirs, @NonNull String targetProduct, @NonNull List<Rule> rules) {
         for (Path resDir : resDirs) {
             if (!Files.exists(resDir) || !Files.isDirectory(resDir)) {
                 Log.warn("arpt: resDir does not exist: " + resDir);
@@ -76,9 +76,14 @@ public class Main {
             rules.forEach(rule -> {
                 final String resourceType = rule.getResourceType();
                 final Set<String> resourceValues = rule.getResourceValues();
-                Resource resource = Resource.of(resourceType);
-                if (resource != null) {
-                    resource.removeValues(resDir.toFile(), resourceValues);
+                final Set<String> targets = rule.getTargets();
+                if (!targets.isEmpty() && !targets.contains(targetProduct)) {
+                    Resource resource = Resource.of(resourceType);
+                    if (resource != null) {
+                        resource.removeValues(resDir.toFile(), resourceValues);
+                    }
+                } else {
+                    Log.info("arpt: resources are available for target '" + targetProduct + "'");
                 }
             });
         }

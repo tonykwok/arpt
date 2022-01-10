@@ -1,5 +1,6 @@
 package com.jxtras.android.build.tools.arpt;
 
+import com.jxtras.android.build.tools.annotation.Nullable;
 import com.jxtras.android.build.tools.util.Log;
 import com.jxtras.android.build.tools.annotation.NonNull;
 import org.w3c.dom.Document;
@@ -19,16 +20,12 @@ public class Rule {
 
     private final Set<String> resourceValues;
     private final String resourceType;
-    private final String availability;
+    private final Set<String> targets;
 
-    public Rule(@NonNull String resourceType, @NonNull String availability) {
+    private Rule(@NonNull String resourceType) {
         this.resourceType = resourceType;
-        this.availability = availability;
         this.resourceValues = new HashSet<>();
-    }
-
-    public void addResourceValue(@NonNull String value) {
-        resourceValues.add(value);
+        this.targets = new HashSet<>();
     }
 
     public @NonNull Set<String> getResourceValues() {
@@ -39,11 +36,11 @@ public class Rule {
         return resourceType;
     }
 
-    public @NonNull String getAvailability() {
-        return availability;
+    public @NonNull Set<String> getTargets() {
+        return targets;
     }
 
-    public static List<Rule> parseRules(@NonNull File file, @NonNull String product) {
+    public static List<Rule> parseRules(@NonNull File file) {
         final List<Rule> rules = new ArrayList<>();
         try {
             final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -66,6 +63,7 @@ public class Rule {
                 final Node node = resources.item(i);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     final Element resource = (Element) node;
+
                     final String resourceType = resource.getTagName();
                     if (resourceType == null || resourceType.isEmpty()) {
                         Log.warn("arpt: resource type not defined");
@@ -74,25 +72,32 @@ public class Rule {
 
                     final String availability = resource.getAttribute("availability");
                     if (availability == null || availability.isEmpty()) {
-                        Log.warn("arpt: availability not defined, default it to *ALL*");
+                        Log.warn("arpt: availability not defined, assume it's available to all");
                         continue;
                     }
 
-                    if (product.matches(availability)) {
-                        Log.info("arpt: resources are available for target '" + product + "'");
-                        continue;
-                    }
-
-                    final Rule rule = new Rule(resourceType, availability);
                     final NodeList items = resource.getElementsByTagName("item");
-                    if (items != null) {
-                        for (int j = 0, count = items.getLength(); j < count; j++) {
-                            final String value = items.item(j).getTextContent();
-                            if (value != null && !value.isEmpty()) {
-                                rule.addResourceValue(value);
-                            }
+                    if (items == null || items.getLength() == 0) {
+                        Log.warn("arpt: resource items not defined, assume it's available to all");
+                        continue;
+                    }
+
+                    final Rule rule = new Rule(resourceType);
+
+                    final String[] targets = availability.split(",");
+                    if (targets != null) {
+                        for (String target : targets) {
+                            rule.targets.add(target.trim());
                         }
                     }
+
+                    for (int j = 0, count = items.getLength(); j < count; j++) {
+                        final String value = items.item(j).getTextContent();
+                        if (value != null && !value.isEmpty()) {
+                            rule.resourceValues.add(value);
+                        }
+                    }
+
                     rules.add(rule);
                 }
             }

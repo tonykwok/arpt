@@ -121,7 +121,7 @@ public enum Option {
      * @return true iff the argument was processed by this option.
      */
     public final boolean processCurrent(ArgumentIterator iterator, OptionHelper helper) {
-        String fullArg = iterator.current(); // "-x" or "-log:level"
+        String fullArg = iterator.current(); // "-dirs" or "-log:level"
         if (hasOption() ? fullArg.startsWith(arg) : fullArg.equals(arg)) {
             processMatching(iterator, helper);
             return true;
