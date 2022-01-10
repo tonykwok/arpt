@@ -24,10 +24,10 @@ endif
 LOCAL_RESOURCE_DIR := $(addprefix $(LOCAL_PATH)/, app/src/main/res)
 LOCAL_FULL_MANIFEST_FILE := $(addprefix $(LOCAL_PATH)/, app/src/main/AndroidManifest.xml)
 
-RESOURCE_PRUNING_TARGET_PRODUCT_NAME := <YOUR PRODUCT NAME>
-RESOURCE_PRUNING_ENABLED := <true/false>
+ARPT_ENABLED := <true/false>
 
-ifeq ($(RESOURCE_PRUNING_ENABLED),true)
+ifeq ($(ARPT_ENABLED),true)
+ARPT_TARGET_PRODUCT := <YOUR TARGET PRODUCT NAME>
 include $(LOCAL_PATH)/arpt.mk
 endif
 
@@ -55,7 +55,7 @@ endif
 arpt_exec_file := $(LOCAL_PATH)/arpt.jar
 arpt_rule_file := $(LOCAL_PATH)/arpt.xml
 
-arpt_product_name := $(RESOURCE_PRUNING_TARGET_PRODUCT_NAME)
+arpt_target_product := $(ARPT_TARGET_PRODUCT)
 
 # DIR: out/target/common/obj/APPS/<YOUR PACKAGE NAME>_intermediates/arpt
 arpt_intermediates_dir := $(call intermediates-dir-for,APPS,$(LOCAL_PACKAGE_NAME),,COMMON)/arpt
@@ -66,7 +66,6 @@ arpt_target_resource_dir := $(arpt_intermediates_dir)/res
 arpt_source_manifest_file := $(LOCAL_FULL_MANIFEST_FILE)
 arpt_target_manifest_file := $(arpt_intermediates_dir)/AndroidManifest.xml
 
-
 .PHONY: force_resource_pruning
 
 force_resource_pruning :
@@ -74,10 +73,9 @@ force_resource_pruning :
 	mkdir -p $(arpt_target_resource_dir) && rm -rf $(arpt_target_resource_dir)
 	cp -R $(arpt_source_resource_dir) $(arpt_target_resource_dir)
 	java -jar $(arpt_exec_file) \
-		 -x $(arpt_rule_file) \
-		 -n $(arpt_product_name) \
+		 -rule $(arpt_rule_file) \
+		 -target $(arpt_target_product) \
 		 $(arpt_target_resource_dir)
-
 
 # Read 'Build System Changes for Android.mk Writers' for more details
 # https://android.googlesource.com/platform/build/+/master/Changes.md
@@ -85,7 +83,6 @@ $(arpt_target_manifest_file) : $(arpt_source_manifest_file) | force_resource_pru
 	@echo "Build target: $@"
 	mkdir -p $(dir $@) && rm -f $@
 	cat $(arpt_source_manifest_file) > $@
-
 
 LOCAL_RESOURCE_DIR := $(arpt_target_resource_dir)
 
@@ -99,24 +96,24 @@ LOCAL_FULL_MANIFEST_FILE := $(arpt_target_manifest_file)
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <string availability="smith">
-        <item>camera_object_tracking_setting_title</item>
-        <item>camera_object_tracking_setting_description</item>
+        <item>camera_settings_object_tracking_title</item>
+        <item>camera_settings_object_tracking_description</item>
     </string>
 
     <string availability="smith|lisa">
-        <item>camera_video_recording_device_too_hot_tips</item>
+        <item>camera_strings_video_recording_device_too_hot</item>
     </string>
 
     <string-array availability="smith">
-        <item>camera_video_quality_values</item>
+        <item>camera_settings_video_quality_values</item>
     </string-array>
 
     <plurals availability="lisa">
-        <item>camera_burst_capture_count</item>
+        <item>camera_strings_burst_capture_count</item>
     </plurals>
 
     <file availability="smith">
-        <item>drawable/camera_asd_scene_car.png</item>
+        <item>drawable/camera_icons_asd_scene_car</item>
     </file>
 </resources>
 ```

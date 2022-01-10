@@ -13,7 +13,7 @@ public enum Option {
             System.out.println("arpt version 0.1");
         }
     },
-    RESOURCE("-r", "Location of resource dirs to be pruned") {
+    RESOURCE("-dir", "Location of resource dirs to be pruned") {
         @Override
         protected void processMatching(ArgumentIterator iterator, OptionHelper helper) {
             List<Path> paths = getFileListArg(iterator, helper);
@@ -22,16 +22,16 @@ public enum Option {
             }
         }
     },
-    NAME("-n", "Specify the target product name") {
+    TARGET("-target", "Specify target product name") {
         @Override
         protected void processMatching(ArgumentIterator iterator, OptionHelper helper) {
             String name = getNameArg(iterator, helper);
             if (name != null) {
-                helper.productName(name);
+                helper.targetProduct(name);
             }
         }
     },
-    RULE("-x", "Specify the rule (an xml file) for resource pruning") {
+    RULE("-rule", "Specify path to the rule file used for resource pruning") {
         @Override
         protected void processMatching(ArgumentIterator iterator, OptionHelper helper) {
             Path rulePath = getFileArg(iterator, helper, true, false);

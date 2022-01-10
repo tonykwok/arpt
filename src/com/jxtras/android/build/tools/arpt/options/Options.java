@@ -12,13 +12,13 @@ public class Options {
 
     private String logLevel = "info";
 
-    private String productName = "none";
+    private String targetProduct;
 
     /**
      * Get the target product name
      */
-    public String getProductName() {
-        return productName;
+    public String getTargetProduct() {
+        return targetProduct;
     }
 
     /**
@@ -70,8 +70,8 @@ public class Options {
         }
 
         @Override
-        public void productName(String name) {
-            productName = name;
+        public void targetProduct(String name) {
+            targetProduct = name;
         }
 
         @Override

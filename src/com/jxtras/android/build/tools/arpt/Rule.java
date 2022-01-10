@@ -43,12 +43,12 @@ public class Rule {
         return availability;
     }
 
-    public static List<Rule> parseRules(@NonNull File arptXml, @NonNull String product) {
+    public static List<Rule> parseRules(@NonNull File file, @NonNull String product) {
         final List<Rule> rules = new ArrayList<>();
         try {
             final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            final Document document = documentBuilder.parse(arptXml);
+            final Document document = documentBuilder.parse(file);
 
             final Element root = document.getDocumentElement();
             if (!"resources".equals(root.getTagName())) {
@@ -68,18 +68,18 @@ public class Rule {
                     final Element resource = (Element) node;
                     final String resourceType = resource.getTagName();
                     if (resourceType == null || resourceType.isEmpty()) {
-                        Log.warn("arpt: resource type not provided");
+                        Log.warn("arpt: resource type not defined");
                         continue;
                     }
 
                     final String availability = resource.getAttribute("availability");
                     if (availability == null || availability.isEmpty()) {
-                        Log.warn("arpt: availability not provided, default it to *ALL*");
+                        Log.warn("arpt: availability not defined, default it to *ALL*");
                         continue;
                     }
 
                     if (product.matches(availability)) {
-                        Log.info("arpt: resources are available for product '" + product + "'");
+                        Log.info("arpt: resources are available for target '" + product + "'");
                         continue;
                     }
 

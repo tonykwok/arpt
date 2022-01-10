@@ -144,7 +144,7 @@ public enum Resource {
     }
 
     private static void saveDocument(@NonNull Document document, @NonNull File xmlFile) {
-        try (FileOutputStream fos = new FileOutputStream(xmlFile) {
+        try (FileOutputStream fos = new FileOutputStream(xmlFile)) {
             document.setXmlStandalone(document.getXmlStandalone());
             document.setXmlVersion(document.getXmlVersion());
 

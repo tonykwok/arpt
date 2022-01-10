@@ -42,15 +42,15 @@ public class Main {
                 return -1;
             }
 
-            final String productName = options.getProductName();
-            if (productName == null || productName.isEmpty()) {
-                Log.error("arpt: productName not provided");
+            final String targetProduct = options.getTargetProduct();
+            if (targetProduct == null || targetProduct.isEmpty()) {
+                Log.error("arpt: target product not provided");
                 return -1;
             }
 
-            final List<Rule> rules = Rule.parseRules(ruleFile, productName);
+            final List<Rule> rules = Rule.parseRules(ruleFile, targetProduct);
             if (rules.isEmpty()) {
-                Log.info("arpt: rules are empty");
+                Log.info("arpt: no rules provided for target '" + targetProduct + "'");
                 return 0;
             }
 
@@ -85,18 +85,18 @@ public class Main {
         return 0;
     }
 
-    private static final String HELP = "Usage example: arpt dir -n name -x rule\n"+
+    private static final String HELP = "Usage example: arpt dir -target name -rule rule\n"+
             "required options are:\n"+
-            "dir        Prune all resources recursively below the specified directory\n"+
-            "-n name    Specify target product name\n"+
-            "-x rule    Specify the rule for pruning\n";
+            "dir             Prune all resources recursively below the specified directory\n"+
+            "-target name    Specify target product name\n"+
+            "-rule rule      Specify the rule for pruning\n";
 
     private static boolean validateOptions(Options options) {
         String err = null;
 
         if (options.getRulePath() == null) {
             err = HELP;
-        } else if (options.getProductName().equals("none")) {
+        } else if (options.getTargetProduct() == null) {
             err = HELP;
         } else if (options.getResourcePaths().isEmpty()) {
             err = HELP;

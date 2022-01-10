@@ -16,8 +16,8 @@ public abstract class OptionHelper {
     /** Record desired log level */
     public abstract void logLevel(String level);
 
-    /** Record product name parameters */
-    public abstract void productName(String name);
+    /** Record target product name */
+    public abstract void targetProduct(String name);
 
     /** Sets the path to rule file for pruning */
     public abstract void rulePath(Path path);
