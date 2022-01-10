@@ -85,7 +85,7 @@ public class Main {
         return 0;
     }
 
-    private static final String HELP = "Usage example: arpt dir -target name -rule rule\n"+
+    private static final String HELP = "Usage example: arpt -target name -rule rule dir\n"+
             "required options are:\n"+
             "dir             Prune all resources recursively below the specified directory\n"+
             "-target name    Specify target product name\n"+

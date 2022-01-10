@@ -13,7 +13,7 @@ public enum Option {
             System.out.println("arpt version 0.1");
         }
     },
-    RESOURCE("-dir", "Location of resource dirs to be pruned") {
+    DIRS("-dirs", "Location of resource dirs to be pruned") {
         @Override
         protected void processMatching(ArgumentIterator iterator, OptionHelper helper) {
             List<Path> paths = getFileListArg(iterator, helper);
