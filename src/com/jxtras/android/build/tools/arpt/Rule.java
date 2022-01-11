@@ -1,6 +1,5 @@
 package com.jxtras.android.build.tools.arpt;
 
-import com.jxtras.android.build.tools.annotation.Nullable;
 import com.jxtras.android.build.tools.util.Log;
 import com.jxtras.android.build.tools.annotation.NonNull;
 import org.w3c.dom.Document;
@@ -18,26 +17,26 @@ import java.util.Set;
 
 public class Rule {
 
-    private final Set<String> resourceValues;
+    private final Set<String> resourceItems;
     private final String resourceType;
-    private final Set<String> targets;
+    private final String availability;
 
-    private Rule(@NonNull String resourceType) {
+    private Rule(@NonNull String resourceType, @NonNull String availability) {
         this.resourceType = resourceType;
-        this.resourceValues = new HashSet<>();
-        this.targets = new HashSet<>();
+        this.availability = availability;
+        this.resourceItems = new HashSet<>();
     }
 
-    public @NonNull Set<String> getResourceValues() {
-        return resourceValues;
+    public @NonNull Set<String> getResourceItems() {
+        return resourceItems;
     }
 
     public @NonNull String getResourceType() {
         return resourceType;
     }
 
-    public @NonNull Set<String> getTargets() {
-        return targets;
+    public @NonNull String getAvailability() {
+        return availability;
     }
 
     public static List<Rule> parseRules(@NonNull File file) {
@@ -66,35 +65,30 @@ public class Rule {
 
                     final String resourceType = resource.getTagName();
                     if (resourceType == null || resourceType.isEmpty()) {
-                        Log.warn("arpt: resource type not defined");
+                        Log.warn("arpt: resource type not defined, assume it's available to all");
                         continue;
                     }
 
                     final String availability = resource.getAttribute("availability");
                     if (availability == null || availability.isEmpty()) {
-                        Log.warn("arpt: availability not defined, assume it's available to all");
+                        Log.warn("arpt: availability of resource type '" + resourceType
+                                + "' not defined, assume it's available to all");
                         continue;
                     }
 
                     final NodeList items = resource.getElementsByTagName("item");
                     if (items == null || items.getLength() == 0) {
-                        Log.warn("arpt: resource items not defined, assume it's available to all");
+                        Log.warn("arpt: resource items of resource type '" + resourceType
+                                + "' not defined, assume it's available to all");
                         continue;
                     }
 
-                    final Rule rule = new Rule(resourceType);
-
-                    final String[] targets = availability.split(",");
-                    if (targets != null) {
-                        for (String target : targets) {
-                            rule.targets.add(target.trim());
-                        }
-                    }
+                    final Rule rule = new Rule(resourceType, availability);
 
                     for (int j = 0, count = items.getLength(); j < count; j++) {
                         final String value = items.item(j).getTextContent();
                         if (value != null && !value.isEmpty()) {
-                            rule.resourceValues.add(value);
+                            rule.resourceItems.add(value);
                         }
                     }
 

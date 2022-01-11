@@ -36,7 +36,7 @@ public class Main {
         }
 
         try {
-            final File ruleFile = options.getRulePath().toFile();
+            final File ruleFile = options.getRuleFile().toFile();
             if (!ruleFile.exists() || !ruleFile.isFile()) {
                 Log.error("arpt: ruleFile does not exist");
                 return -1;
@@ -54,7 +54,7 @@ public class Main {
                 return 0;
             }
 
-            final List<Path> resDirs = options.getResourcePaths();
+            final List<Path> resDirs = options.getResourceDirs();
             if (resDirs == null || resDirs.isEmpty()) {
                 Log.info("arpt: resDirs is empty or not provided");
                 return 0;
@@ -75,15 +75,20 @@ public class Main {
             }
             rules.forEach(rule -> {
                 final String resourceType = rule.getResourceType();
-                final Set<String> resourceValues = rule.getResourceValues();
-                final Set<String> targets = rule.getTargets();
-                if (!targets.isEmpty() && !targets.contains(targetProduct)) {
+                final String availability = rule.getAvailability();
+                final Set<String> resourceItems = rule.getResourceItems();
+                if (!availability.isEmpty() && !targetProduct.matches(availability)) {
                     Resource resource = Resource.of(resourceType);
                     if (resource != null) {
-                        resource.removeValues(resDir.toFile(), resourceValues);
+                        resource.removeItems(resDir.toFile(), resourceItems);
                     }
                 } else {
-                    Log.info("arpt: resources are available for target '" + targetProduct + "'");
+                    Log.info("arpt: target '" + targetProduct
+                            + "' matches with regex '" + availability
+                            + "', skip pruning the following resources:");
+                    for (String item : resourceItems) {
+                        Log.info("    " + resourceType + "://" + item);
+                    }
                 }
             });
         }
@@ -99,11 +104,11 @@ public class Main {
     private static boolean validateOptions(Options options) {
         String err = null;
 
-        if (options.getRulePath() == null) {
+        if (options.getRuleFile() == null) {
             err = HELP;
         } else if (options.getTargetProduct() == null) {
             err = HELP;
-        } else if (options.getResourcePaths().isEmpty()) {
+        } else if (options.getResourceDirs().isEmpty()) {
             err = HELP;
         }
 

@@ -6,9 +6,9 @@ import java.util.List;
 
 public class Options {
 
-    private List<Path> resourcePaths = new ArrayList<>();
+    private List<Path> resourceDirs = new ArrayList<>();
 
-    private Path rulePath;
+    private Path ruleFile;
 
     private String logLevel = "info";
 
@@ -22,17 +22,17 @@ public class Options {
     }
 
     /**
-     * Get the path to the configuration file
+     * Get the path to the rule file
      */
-    public Path getRulePath() {
-        return rulePath;
+    public Path getRuleFile() {
+        return ruleFile;
     }
 
     /**
      * Get all resource locations for files to be pruned
      */
-    public List<Path> getResourcePaths() {
-        return resourcePaths;
+    public List<Path> getResourceDirs() {
+        return resourceDirs;
     }
 
     /**
@@ -60,8 +60,8 @@ public class Options {
         }
 
         @Override
-        public void resourcePaths(List<Path> paths) {
-            resourcePaths.addAll(paths);
+        public void resourceDirs(List<Path> paths) {
+            resourceDirs.addAll(paths);
         }
 
         @Override
@@ -75,8 +75,8 @@ public class Options {
         }
 
         @Override
-        public void rulePath(Path path) {
-            rulePath = path;
+        public void ruleFile(Path path) {
+            ruleFile = path;
         }
     }
 }

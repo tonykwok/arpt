@@ -10,8 +10,8 @@ public abstract class OptionHelper {
     /** Handle error */
     public abstract void reportError(String msg);
 
-    /** Record a root of resources to be pruned */
-    public abstract void resourcePaths(List<Path> path);
+    /** Record locations of resources to be pruned */
+    public abstract void resourceDirs(List<Path> path);
 
     /** Record desired log level */
     public abstract void logLevel(String level);
@@ -20,7 +20,7 @@ public abstract class OptionHelper {
     public abstract void targetProduct(String name);
 
     /** Sets the path to rule file for pruning */
-    public abstract void rulePath(Path path);
+    public abstract void ruleFile(Path path);
 
     /**
      * Traverses an array of arguments and performs the appropriate callbacks.
@@ -40,7 +40,7 @@ public abstract class OptionHelper {
                     }
                 }
             } else {
-                resourcePaths(Arrays.asList(Paths.get(arg)));
+                resourceDirs(Arrays.asList(Paths.get(arg)));
             }
         }
     }

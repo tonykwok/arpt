@@ -18,7 +18,7 @@ public enum Option {
         protected void processMatching(ArgumentIterator iterator, OptionHelper helper) {
             List<Path> paths = getFileListArg(iterator, helper);
             if (paths != null) {
-                helper.resourcePaths(paths);
+                helper.resourceDirs(paths);
             }
         }
     },
@@ -34,9 +34,9 @@ public enum Option {
     RULE("-rule", "Specify path to the rule file used for resource pruning") {
         @Override
         protected void processMatching(ArgumentIterator iterator, OptionHelper helper) {
-            Path rulePath = getFileArg(iterator, helper, true, false);
-            if (rulePath != null) {
-                helper.rulePath(rulePath);
+            Path path = getFileArg(iterator, helper, true, false);
+            if (path != null) {
+                helper.ruleFile(path);
             }
         }
     },

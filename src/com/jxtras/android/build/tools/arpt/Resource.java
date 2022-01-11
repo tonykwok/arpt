@@ -27,14 +27,14 @@ import java.util.WeakHashMap;
 public enum Resource {
     STRING("string") {
         @Override
-        public void removeValues(@NonNull File resDir, @NonNull Set<String> resourceValues) {
+        public void removeItems(@NonNull File resDir, @NonNull Set<String> resourceItems) {
             File[] valuesDirs = resDir.listFiles(VALUES_DIR_FILTER);
             if (valuesDirs != null) {
                 Arrays.stream(valuesDirs).forEach(dir -> {
                     File[] xmlFiles = dir.listFiles(XML_FILE_FILTER);
                     if (xmlFiles != null) {
                         Arrays.stream(xmlFiles).forEach(file -> {
-                            removeTypedValuesFromXml(file, getResourceType(), resourceValues);
+                            removeTypedValuesFromXml(file, getResourceType(), resourceItems);
                         });
                     }
                 });
@@ -43,20 +43,20 @@ public enum Resource {
     },
     STRING_ARRAY("string-array") {
         @Override
-        public void removeValues(@NonNull File resDir, @NonNull Set<String> resourceValues) {
-            STRING.removeValues(resDir, resourceValues);
+        public void removeItems(@NonNull File resDir, @NonNull Set<String> resourceItems) {
+            STRING.removeItems(resDir, resourceItems);
         }
     },
     PLURALS("plurals") {
         @Override
-        public void removeValues(@NonNull File resDir, @NonNull Set<String> resourceValues) {
-            STRING.removeValues(resDir, resourceValues);
+        public void removeItems(@NonNull File resDir, @NonNull Set<String> resourceItems) {
+            STRING.removeItems(resDir, resourceItems);
         }
     },
     FILE("file") {
         @Override
-        public void removeValues(@NonNull File resDir, @NonNull Set<String> resourceValues) {
-            removeFiles(resDir, resourceValues);
+        public void removeItems(@NonNull File resDir, @NonNull Set<String> resourceItems) {
+            removeFiles(resDir, resourceItems);
         }
     };
 
@@ -90,7 +90,7 @@ public enum Resource {
 
     }
 
-    protected abstract void removeValues(@NonNull File resDir, @NonNull Set<String> resourceValues);
+    protected abstract void removeItems(@NonNull File resDir, @NonNull Set<String> resourceItems);
 
     private static void removeFiles(@NonNull File resDir, @NonNull Set<String> filePathList) {
         int count = 0;
