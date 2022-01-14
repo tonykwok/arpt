@@ -85,7 +85,7 @@ public class Main {
                 } else {
                     Log.info("arpt: target '" + targetProduct
                             + "' matches with regex '" + availability
-                            + "', skip pruning the following resources:");
+                            + "', skip removing the following resources:");
                     for (String item : resourceItems) {
                         Log.info("    " + resourceType + "://" + item);
                     }
@@ -98,8 +98,7 @@ public class Main {
     private static final String HELP = "Usage example: arpt -target name -rule rule dir\n"+
             "required options are:\n"+
             "dir             Prune all resources recursively below the specified directory\n"+
-            "-target name    Specify target product name\n"+
-            "-rule rule      Specify the rule for pruning\n";
+            "-target name    Specify target product name\n";
 
     private static boolean validateOptions(Options options) {
         String err = null;

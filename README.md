@@ -96,8 +96,8 @@ LOCAL_FULL_MANIFEST_FILE := $(arpt_target_manifest_file)
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <string availability="smith">
-        <item>camera_settings_object_tracking_title</item>
-        <item>camera_settings_object_tracking_description</item>
+        <item>camera_strings_object_tracking_title</item>
+        <item>camera_strings_object_tracking_description</item>
     </string>
 
     <string availability="smith|lisa">
