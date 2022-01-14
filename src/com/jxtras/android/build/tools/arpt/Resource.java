@@ -102,7 +102,7 @@ public enum Resource {
                     Log.info("arpt: failed");
                 } else {
                     count++;
-                    Log.info("arpt: succeed");
+                    Log.info("arpt: '" + file + "' removed successfully");
                 }
             } else {
                 Log.info("arpt: file does not exist");
@@ -135,8 +135,8 @@ public enum Resource {
 
             if (!removableNodes.isEmpty()) {
                 for (Element node : removableNodes) {
-                    Log.info("arpt: " + node.getTagName()
-                            + ": " + node.getAttribute("name") + " removed successfully");
+                    Log.info("arpt: '@" + node.getTagName() + "/" + node.getAttribute("name")
+                            + "' removed successfully");
                     node.getParentNode().removeChild(node);
                 }
                 saveDocument(document, xmlFile);
