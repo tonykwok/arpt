@@ -27,14 +27,14 @@ import java.util.WeakHashMap;
 public enum Resource {
     STRING("string") {
         @Override
-        public void removeItems(@NonNull File resDir, @NonNull Set<String> resourceItems) {
-            File[] valuesDirs = resDir.listFiles(VALUES_DIR_FILTER);
+        public void remove(@NonNull File resDir, @NonNull Set<String> resNames) {
+            final File[] valuesDirs = resDir.listFiles(VALUES_DIR_FILTER);
             if (valuesDirs != null) {
                 Arrays.stream(valuesDirs).forEach(dir -> {
                     File[] xmlFiles = dir.listFiles(XML_FILE_FILTER);
                     if (xmlFiles != null) {
                         Arrays.stream(xmlFiles).forEach(file -> {
-                            removeTypedValuesFromXml(file, getResourceType(), resourceItems);
+                            removeResourcesFromFile(file, getResourceType(), resNames);
                         });
                     }
                 });
@@ -43,20 +43,20 @@ public enum Resource {
     },
     STRING_ARRAY("string-array") {
         @Override
-        public void removeItems(@NonNull File resDir, @NonNull Set<String> resourceItems) {
-            STRING.removeItems(resDir, resourceItems);
+        public void remove(@NonNull File resDir, @NonNull Set<String> resNames) {
+            STRING.remove(resDir, resNames);
         }
     },
     PLURALS("plurals") {
         @Override
-        public void removeItems(@NonNull File resDir, @NonNull Set<String> resourceItems) {
-            STRING.removeItems(resDir, resourceItems);
+        public void remove(@NonNull File resDir, @NonNull Set<String> resNames) {
+            STRING.remove(resDir, resNames);
         }
     },
     FILE("file") {
         @Override
-        public void removeItems(@NonNull File resDir, @NonNull Set<String> resourceItems) {
-            removeFiles(resDir, resourceItems);
+        public void remove(@NonNull File resDir, @NonNull Set<String> resNames) {
+            removeFilesInDirectory(resDir, resNames);
         }
     };
 
@@ -87,14 +87,13 @@ public enum Resource {
                 return null;
             });
         }
-
     }
 
-    protected abstract void removeItems(@NonNull File resDir, @NonNull Set<String> resourceItems);
+    protected abstract void remove(@NonNull File resDir, @NonNull Set<String> resNames);
 
-    private static void removeFiles(@NonNull File resDir, @NonNull Set<String> filePathList) {
+    private static void removeFilesInDirectory(@NonNull File resDir, @NonNull Set<String> filePaths) {
         int count = 0;
-        for (String path : filePathList) {
+        for (String path : filePaths) {
             File file = new File(resDir, path);
             Log.info("arpt: removing: " + file);
             if (file.exists() && file.isFile()) {
@@ -102,18 +101,18 @@ public enum Resource {
                     Log.info("arpt: failed");
                 } else {
                     count++;
-                    Log.info("arpt: '" + file + "' removed successfully");
+                    Log.info("arpt: file removed successfully");
                 }
             } else {
                 Log.info("arpt: file does not exist");
             }
         }
-        Log.info("arpt: " + count + "/" + filePathList.size() + " file(s) removed");
+        Log.info("arpt: " + count + "/" + filePaths.size() + " file(s) removed");
     }
 
-    private static void removeTypedValuesFromXml(@NonNull File xmlFile, @NonNull String resourceType, @NonNull Set<String> resourceValues) {
+    private static void removeResourcesFromFile(@NonNull File xmlFile, @NonNull String resourceType, @NonNull Set<String> resNames) {
         Log.info("arpt: pruning: " + xmlFile);
-        final List<Element> removableNodes = new ArrayList<>();
+        final List<Element> resNodes = new ArrayList<>();
         try {
             final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -121,30 +120,30 @@ public enum Resource {
 
             final NodeList resources = document.getElementsByTagName(resourceType);
             if (resources == null || resources.getLength() == 0) {
-                Log.info("arpt: resource of type '" + resourceType + "' does not exist");
+                Log.info("arpt: resource(s) of type '" + resourceType + "' not found");
                 return;
             }
 
             for (int i = 0, length = resources.getLength(); i < length; i++) {
-                final Element resource = (Element) resources.item(i);
-                final String name = resource.getAttribute("name");
-                if (name != null && resourceValues.contains(name)) {
-                    removableNodes.add(resource);
+                final Element resNode = (Element) resources.item(i);
+                final String name = resNode.getAttribute("name");
+                if (name != null && resNames.contains(name)) {
+                    resNodes.add(resNode);
                 }
             }
 
-            if (!removableNodes.isEmpty()) {
-                for (Element node : removableNodes) {
-                    Log.info("arpt: '@" + node.getTagName() + "/" + node.getAttribute("name")
+            if (!resNodes.isEmpty()) {
+                for (Element resNode : resNodes) {
+                    Log.info("arpt: '@" + resNode.getTagName() + "/" + resNode.getAttribute("name")
                             + "' removed successfully");
-                    node.getParentNode().removeChild(node);
+                    resNode.getParentNode().removeChild(resNode);
                 }
                 saveDocument(document, xmlFile);
             }
         } catch (Exception e) {
             Log.error("arpt: exception occurred: " + e.getMessage());
         }
-        Log.info("arpt: " + removableNodes.size() + " resource(s) removed");
+        Log.info("arpt: " + resNodes.size() + " resource(s) removed");
     }
 
     private static void saveDocument(@NonNull Document document, @NonNull File xmlFile) {

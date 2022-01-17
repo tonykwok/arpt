@@ -40,16 +40,14 @@ include $(BUILD_RRO_PACKAGE)
 ### arpt.mk
 
 ```
-ifeq ($(LOCAL_FULL_MANIFEST_FILE),)
-$(error $(LOCAL_PACKAGE_NAME): LOCAL_FULL_MANIFEST_FILE not defined)
-endif
+ifneq (,$(LOCAL_RESOURCE_DIR))
 
-ifeq ($(LOCAL_RESOURCE_DIR),)
-$(error $(LOCAL_PACKAGE_NAME): LOCAL_RESOURCE_DIR not defined)
-endif
+$(info $(LOCAL_PACKAGE_NAME): start resource pruning for $(ARPT_TARGET_PRODUCT))
+
+LOCAL_RESOURCE_DIR := $(foreach d,$(LOCAL_RESOURCE_DIR),$(call clean-path,$(d)))
 
 ifneq ($(words $(LOCAL_RESOURCE_DIR)),1)
-$(error $(LOCAL_PACKAGE_NAME): multiple LOCAL_RESOURCE_DIR not supported: $(LOCAL_RESOURCE_DIR))
+    $(error $(LOCAL_PACKAGE_NAME): multiple LOCAL_RESOURCE_DIR not supported: $(LOCAL_RESOURCE_DIR))
 endif
 
 arpt_exec_file := $(LOCAL_PATH)/arpt.jar
@@ -59,35 +57,32 @@ arpt_target_product := $(ARPT_TARGET_PRODUCT)
 
 # DIR: out/target/common/obj/APPS/<YOUR PACKAGE NAME>_intermediates/arpt
 arpt_intermediates_dir := $(call intermediates-dir-for,APPS,$(LOCAL_PACKAGE_NAME),,COMMON)/arpt
+arpt_log_file := $(addprefix $(arpt_intermediates_dir)/, arpt.log)
 
 arpt_source_resource_dir := $(LOCAL_RESOURCE_DIR)
-arpt_target_resource_dir := $(arpt_intermediates_dir)/res
+arpt_target_resource_dir := $(addprefix $(arpt_intermediates_dir)/, res)
 
-arpt_source_manifest_file := $(LOCAL_FULL_MANIFEST_FILE)
-arpt_target_manifest_file := $(arpt_intermediates_dir)/AndroidManifest.xml
+# COPY resource dir to intermediates dir
+$(shell mkdir -p $(arpt_target_resource_dir) && rm -rf $(arpt_target_resource_dir))
+$(shell cp -R $(arpt_source_resource_dir) $(arpt_target_resource_dir))
 
-.PHONY: force_resource_pruning
+# DO resource pruning
+arpt_result := $(shell java -jar $(arpt_exec_file) \
+                            -rule $(arpt_rule_file) \
+                            -target $(arpt_target_product) \
+                            $(arpt_target_resource_dir) > $(arpt_log_file); echo $$?)
 
-force_resource_pruning :
-	@echo "Start resource pruning..."
-	mkdir -p $(arpt_target_resource_dir) && rm -rf $(arpt_target_resource_dir)
-	cp -R $(arpt_source_resource_dir) $(arpt_target_resource_dir)
-	java -jar $(arpt_exec_file) \
-		 -rule $(arpt_rule_file) \
-		 -target $(arpt_target_product) \
-		 $(arpt_target_resource_dir)
-
-# Read 'Build System Changes for Android.mk Writers' for more details
-# https://android.googlesource.com/platform/build/+/master/Changes.md
-$(arpt_target_manifest_file) : $(arpt_source_manifest_file) | force_resource_pruning
-	@echo "Build target: $@"
-	mkdir -p $(dir $@) && rm -f $@
-	cat $(arpt_source_manifest_file) > $@
+# CHECK status
+$(info $(file <$(arpt_log_file)))
+ifneq ($(arpt_result),0)
+    $(error $(LOCAL_PACKAGE_NAME): resource pruning failed!)
+else
+    $(info $(LOCAL_PACKAGE_NAME): resource pruning completed successfully!)
+endif
 
 LOCAL_RESOURCE_DIR := $(arpt_target_resource_dir)
 
-# WHERE THE MAGIC HAPPENS
-LOCAL_FULL_MANIFEST_FILE := $(arpt_target_manifest_file)
+endif
 ```
 
 ### arpt.xml

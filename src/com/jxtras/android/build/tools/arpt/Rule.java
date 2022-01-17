@@ -17,18 +17,18 @@ import java.util.Set;
 
 public class Rule {
 
-    private final Set<String> resourceItems;
+    private final Set<String> resourceNames;
     private final String resourceType;
     private final String availability;
 
     private Rule(@NonNull String resourceType, @NonNull String availability) {
         this.resourceType = resourceType;
         this.availability = availability;
-        this.resourceItems = new HashSet<>();
+        this.resourceNames = new HashSet<>();
     }
 
-    public @NonNull Set<String> getResourceItems() {
-        return resourceItems;
+    public @NonNull Set<String> getResourceNames() {
+        return resourceNames;
     }
 
     public @NonNull String getResourceType() {
@@ -86,9 +86,9 @@ public class Rule {
                     final Rule rule = new Rule(resourceType, availability);
 
                     for (int j = 0, count = items.getLength(); j < count; j++) {
-                        final String value = items.item(j).getTextContent();
-                        if (value != null && !value.isEmpty()) {
-                            rule.resourceItems.add(value);
+                        final String name = items.item(j).getTextContent();
+                        if (name != null && !name.isEmpty()) {
+                            rule.resourceNames.add(name);
                         }
                     }
 

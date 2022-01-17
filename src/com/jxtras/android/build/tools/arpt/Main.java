@@ -76,18 +76,18 @@ public class Main {
             rules.forEach(rule -> {
                 final String resourceType = rule.getResourceType();
                 final String availability = rule.getAvailability();
-                final Set<String> resourceItems = rule.getResourceItems();
+                final Set<String> names = rule.getResourceNames();
                 if (!availability.isEmpty() && !targetProduct.matches(availability)) {
                     Resource resource = Resource.of(resourceType);
                     if (resource != null) {
-                        resource.removeItems(resDir.toFile(), resourceItems);
+                        resource.remove(resDir.toFile(), names);
                     }
                 } else {
                     Log.info("arpt: target '" + targetProduct
                             + "' matches with regex '" + availability
                             + "', skip removing the following resources:");
-                    for (String item : resourceItems) {
-                        Log.info("    " + resourceType + "://" + item);
+                    for (String name : names) {
+                        Log.info("    @" + resourceType + "/" + name);
                     }
                 }
             });
@@ -98,7 +98,8 @@ public class Main {
     private static final String HELP = "Usage example: arpt -target name -rule rule dir\n"+
             "required options are:\n"+
             "dir             Prune all resources recursively below the specified directory\n"+
-            "-target name    Specify target product name\n";
+            "-target name    Specify target product name\n"+
+            "-rule rule      Specify the rule for pruning\n";
 
     private static boolean validateOptions(Options options) {
         String err = null;
