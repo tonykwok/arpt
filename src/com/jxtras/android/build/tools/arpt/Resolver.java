@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-public enum Resource {
+public enum Resolver {
     STRING("string") {
         @Override
         public void remove(@NonNull File resDir, @NonNull Set<String> resNames) {
@@ -64,11 +64,11 @@ public enum Resource {
     private static final FileFilter XML_FILE_FILTER = file -> file.getName().endsWith(".xml") && !DIR_FILTER.accept(file);
     private static final FileFilter VALUES_DIR_FILTER = file -> DIR_FILTER.accept(file) && file.getName().startsWith("values");
 
-    private static final Map<String, Resource> types = new WeakHashMap<>(5);
+    private static final Map<String, Resolver> resolvers = new WeakHashMap<>(5);
 
     private final String resourceType;
 
-    Resource(@NonNull String resourceType) {
+    Resolver(@NonNull String resourceType) {
         this.resourceType = resourceType;
     }
 
@@ -76,10 +76,10 @@ public enum Resource {
         return resourceType;
     }
 
-    public static @Nullable Resource of(@NonNull String resourceType) {
-        synchronized(types) {
-            return types.computeIfAbsent(resourceType, s -> {
-                for (Resource resource : Resource.values()) {
+    public static @Nullable Resolver get(@NonNull String resourceType) {
+        synchronized(resolvers) {
+            return resolvers.computeIfAbsent(resourceType, s -> {
+                for (Resolver resource : Resolver.values()) {
                     if (resource.resourceType.equals(s)) {
                         return resource;
                     }
@@ -155,10 +155,10 @@ public enum Resource {
             Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.METHOD, "xml");
             transformer.setOutputProperty(OutputKeys.ENCODING, "utf-8");
-//            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            //            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
             transformer.setOutputProperty(OutputKeys.INDENT, "no");
-//            out.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>".getBytes(StandardCharsets.UTF_8));
-//            out.write(System.lineSeparator().getBytes(StandardCharsets.UTF_8));
+            //            out.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>".getBytes(StandardCharsets.UTF_8));
+            //            out.write(System.lineSeparator().getBytes(StandardCharsets.UTF_8));
             DOMSource domSource = new DOMSource(document);
             StreamResult streamResult = new StreamResult(fos);
             transformer.transform(domSource, streamResult);

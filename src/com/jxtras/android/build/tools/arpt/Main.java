@@ -78,9 +78,9 @@ public class Main {
                 final String availability = rule.getAvailability();
                 final Set<String> names = rule.getResourceNames();
                 if (!availability.isEmpty() && !targetProduct.matches(availability)) {
-                    Resource resource = Resource.of(resourceType);
-                    if (resource != null) {
-                        resource.remove(resDir.toFile(), names);
+                    Resolver resolver = Resolver.get(resourceType);
+                    if (resolver != null) {
+                        resolver.remove(resDir.toFile(), names);
                     }
                 } else {
                     Log.info("arpt: target '" + targetProduct
