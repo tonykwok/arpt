@@ -5,7 +5,7 @@ Android Resource Pruning Tool
 
 ### Android.mk
 
-```
+```makefile
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
@@ -39,7 +39,7 @@ include $(BUILD_RRO_PACKAGE)
 
 ### arpt.mk
 
-```
+```makefile
 ifneq (,$(LOCAL_RESOURCE_DIR))
 
 $(info $(LOCAL_PACKAGE_NAME): start resource pruning for $(ARPT_TARGET_PRODUCT))
@@ -87,7 +87,7 @@ endif
 
 ### arpt.xml
 
-```
+```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <string availability="smith">
