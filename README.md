@@ -1,9 +1,9 @@
-# arpt
-Android Resource Pruning Tool
+# What's arpt?
+ARPT is an **A**ndroid **R**esource **P**runing **T**ool that helps to remove resources that unrelated to the specific target products
 
-## usage
+# Get started
 
-### Android.mk
+_Step1: Re-write your `Android.mk` file as following_
 
 ```makefile
 LOCAL_PATH := $(call my-dir)
@@ -25,9 +25,7 @@ LOCAL_RESOURCE_DIR := $(addprefix $(LOCAL_PATH)/, app/src/main/res)
 LOCAL_FULL_MANIFEST_FILE := $(addprefix $(LOCAL_PATH)/, app/src/main/AndroidManifest.xml)
 
 ARPT_ENABLED := <true/false>
-
 ifeq ($(ARPT_ENABLED),true)
-ARPT_TARGET_PRODUCT := <YOUR TARGET PRODUCT NAME>
 include $(LOCAL_PATH)/arpt.mk
 endif
 
@@ -37,7 +35,7 @@ $(info $(LOCAL_PACKAGE_NAME): LOCAL_FULL_MANIFEST_FILE: $(LOCAL_FULL_MANIFEST_FI
 include $(BUILD_RRO_PACKAGE)
 ```
 
-### arpt.mk
+_Step 2: Create another `Makefile` and name it to `arpt.mk`_
 
 ```makefile
 ifneq (,$(LOCAL_RESOURCE_DIR))
@@ -53,7 +51,7 @@ endif
 arpt_exec_file := $(LOCAL_PATH)/arpt.jar
 arpt_rule_file := $(LOCAL_PATH)/arpt.xml
 
-arpt_target_product := $(ARPT_TARGET_PRODUCT)
+arpt_target_product := <YOUR TARGET PRODUCT NAME>
 
 # DIR: out/target/common/obj/APPS/<YOUR PACKAGE NAME>_intermediates/arpt
 arpt_intermediates_dir := $(call intermediates-dir-for,APPS,$(LOCAL_PACKAGE_NAME),,COMMON)/arpt
@@ -85,7 +83,7 @@ LOCAL_RESOURCE_DIR := $(arpt_target_resource_dir)
 endif
 ```
 
-### arpt.xml
+_Step 3: Define the pruning rule in `arpt.xml`_
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
@@ -112,3 +110,5 @@ endif
     </file>
 </resources>
 ```
+
+_**NOTE:** In the sample above, all these 3 files are created in the root directory of the module_
