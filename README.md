@@ -1,5 +1,5 @@
 # What's ARPT?
-ARPT is an **A**ndroid **R**esource **P**runing **T**ool that helps to remove resources that unrelated to the specific target products
+_ARPT_ is an **A**ndroid **R**esource **P**runing **T**ool and it helps remove resources that are not related to a specific target product
 
 # Get started
 
