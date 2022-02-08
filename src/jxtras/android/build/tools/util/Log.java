@@ -1,4 +1,4 @@
-package com.jxtras.android.build.tools.util;
+package jxtras.android.build.tools.util;
 
 import java.io.PrintStream;
 

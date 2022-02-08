@@ -1,8 +1,8 @@
-package com.jxtras.android.build.tools.arpt;
+package jxtras.android.build.tools.arpt;
 
-import com.jxtras.android.build.tools.arpt.options.Options;
-import com.jxtras.android.build.tools.util.Log;
-import com.jxtras.android.build.tools.annotation.NonNull;
+import jxtras.android.build.tools.arpt.options.Options;
+import jxtras.android.build.tools.util.Log;
+import jxtras.android.build.tools.annotation.NonNull;
 
 import java.io.*;
 import java.nio.file.Files;

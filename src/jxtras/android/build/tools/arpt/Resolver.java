@@ -1,8 +1,8 @@
-package com.jxtras.android.build.tools.arpt;
+package jxtras.android.build.tools.arpt;
 
-import com.jxtras.android.build.tools.annotation.Nullable;
-import com.jxtras.android.build.tools.util.Log;
-import com.jxtras.android.build.tools.annotation.NonNull;
+import jxtras.android.build.tools.annotation.Nullable;
+import jxtras.android.build.tools.util.Log;
+import jxtras.android.build.tools.annotation.NonNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -76,7 +76,8 @@ public enum Resolver {
         return resourceType;
     }
 
-    public static @Nullable Resolver get(@NonNull String resourceType) {
+    public static @Nullable
+    Resolver get(@NonNull String resourceType) {
         synchronized(resolvers) {
             return resolvers.computeIfAbsent(resourceType, s -> {
                 for (Resolver resource : Resolver.values()) {

@@ -1,4 +1,4 @@
-package com.jxtras.android.build.tools.annotation;
+package jxtras.android.build.tools.annotation;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
@@ -13,19 +13,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Denotes that a parameter, field or method return value can be null.
- * <p>
- * When decorating a method call parameter, this denotes that the parameter can
- * legitimately be null and the method will gracefully deal with it. Typically
- * used on optional parameters.
- * <p>
- * When decorating a method, this denotes the method might legitimately return
- * null.
+ * Denotes that a parameter, field or method return value can never be null.
  * <p>
  * This is a marker annotation and it has no specific attributes.
  */
 @Documented
 @Retention(CLASS)
 @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-public @interface Nullable {
+public @interface NonNull {
 }

@@ -1,4 +1,4 @@
-package com.jxtras.android.build.tools.arpt.options;
+package jxtras.android.build.tools.arpt.options;
 
 import java.util.Iterator;
 
